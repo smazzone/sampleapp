@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/smazzone/sampleapp?style=plastic)
+[![GitHub](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/smazzone/sampleapp)
 ![GitHub last commit](https://img.shields.io/github/last-commit/smazzone/sampleapp)
 
