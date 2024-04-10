@@ -1,0 +1,31 @@
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
+metadata:
+  name: datadog
+spec:
+  global:
+    clusterName: docker-desktop
+    kubelet:
+      tlsVerify: false
+    tags:
+      - env:dev
+    credentials:
+      apiSecret:
+        secretName: datadog-secret
+        keyName: api-key
+      appSecret:
+        secretName: datadog-secret
+        keyName: app-key
+  features:
+    apm:
+      instrumentation:
+        enabled: true
+        enabledNamespaces:
+          - apps
+        libVersions:
+          java: v1.32.0
+    logCollection:
+      enabled: true
+      containerCollectAll: true
+    remoteConfiguration:
+      enabled: true

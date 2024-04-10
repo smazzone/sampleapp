@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: frontend
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: frontend
+    spec:
+      containers:
+      - image: smazzone/frontend:v2
+        command: ["/bin/sh"]
+        args: ["-c", "java -jar frontend.jar"]
+        imagePullPolicy: Always
+        name: frontend
+        env:
+          - name: URL
+            value: http://backend:8088
+        ports:
+          - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: backend
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: backend
+    spec:
+      containers:
+      - image: smazzone/backend:v2
+        command: ["/bin/sh"]
+        args: ["-c", "java -jar backend.jar --server.port=8088"]
+        imagePullPolicy: Always
+        name: backend
+        env:
+        ports:
+          - containerPort: 8088
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - name: frontend-port 
+    port: 8080 
+    protocol: TCP
+    targetPort: 8080 
+  selector:
+    name: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  ports:
+  - name: backend-port 
+    port: 8088 
+    protocol: TCP
+    targetPort: 8088 
+  selector:
+    name: backend
